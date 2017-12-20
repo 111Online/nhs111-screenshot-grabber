@@ -2,7 +2,9 @@ import { Router } from 'express'
 const fs = require('fs')
 const btoa = require('btoa')
 const mkdirp = require('mkdirp')
-const pool = require('puppeteer-pool')()
+const pool = require('puppeteer-pool')({
+  puppeteerArgs: { args: [ '--no-sandbox' ] }
+})
 const glob = require('glob')
 const archiver = require('archiver')
 const shortid = require('shortid')
