@@ -17,6 +17,20 @@
           <p>{{schedule}}</p>
         </div>
 
+        <div v-if="metadata.errors">
+          <h3>Errors</h3>
+          <ul style="color: #b10e1e;">
+            <li v-for="postcode in Object.keys(metadata.errors)">
+              <p>{{postcode}}</p>
+              <ul>
+                <li v-for="url in metadata.errors[postcode]">
+                  {{url}}
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+
         <h3>Postcodes</h3>
         <ul>
             <li v-for="postcode in metadata.postcodes">{{ postcode }}</li>
@@ -24,7 +38,7 @@
 
         <h3>URLs</h3>
         <ul>
-            <li v-for="url in metadata.urls">{{ url }}</li>
+            <li v-for="(url, name) in metadata.urls"> {{name}} - {{ url }}</li>
         </ul>
     </div>
 

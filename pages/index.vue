@@ -16,15 +16,24 @@
       <label for="urls">URLs <span class="count">({{urls_count}})</span><p class="form-hint">Please enter each url on a separate line as [title] space [url], the title will be the name of the file</p></label>
       <textarea v-model="urls" cols="20" id="urls" name="urls" placeholder="URLs" rows="5" class="feedback-input" style="resize: auto;"></textarea>
       
-      <label for="auth-user">Authorisation <span class="count">(optional)</span><p class="form-hint">URLs are sometimes password protected, if that is the case please enter the username and password.</p></label>
-      <input id="auth-user" name="auth-user" class="form-textbox" v-model="auth_user" placeholder="Username">
-      <input type="password" id="auth-password" name="auth-password" class="form-textbox" v-model="auth_password" placeholder="Password">
+      <details>
+        <summary><span class="details__arrow"></span> Authorisation</summary>
+        <div>
+          <label for="auth-user">Authorisation <span class="count">(optional)</span><p class="form-hint">URLs are sometimes password protected, if that is the case please enter the username and password.</p></label>
+          <input id="auth-user" name="auth-user" class="form-textbox" v-model="auth_user" placeholder="Username">
+          <input type="password" id="auth-password" name="auth-password" class="form-textbox" v-model="auth_password" placeholder="Password">
+        </div>
+      </details>
 
-      <label for="schedule-date">Schedule <span class="count">(optional)</span><p class="form-hint">Please enter a future date and time to schedule the tool to run. Leave empty to run it immediately.</p></label>
-      <input type="date" id="schedule-date" class="form-textbox" v-model="schedule_date" name="schedule-date">
-      <input type="time" id="schedule-time" class="form-textbox" v-model="schedule_time" name="schedule-time">
-      <p v-if="schedule">Scheduled for: {{ schedule_format }}</p>
-
+      <details>
+        <summary><span class="details__arrow"></span> Schedule</summary>
+        <div>
+          <label for="schedule-date">Schedule <span class="count">(optional)</span><p class="form-hint">Please enter a future date and time to schedule the tool to run. Leave empty to run it immediately.</p></label>
+          <input type="date" id="schedule-date" class="form-textbox" v-model="schedule_date" name="schedule-date">
+          <input type="time" id="schedule-time" class="form-textbox" v-model="schedule_time" name="schedule-time">
+          <p v-if="schedule">Scheduled for: {{ schedule_format }}</p>
+        </div>
+      </details>
 
       <button type="submit" class="button--next">Next</button>
       <input type="hidden" name="schedule" v-model="schedule">

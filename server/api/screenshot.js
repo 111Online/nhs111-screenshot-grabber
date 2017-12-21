@@ -33,6 +33,15 @@ function screenshot (name, url, postcode, id, auth) {
     console.log(`File created at [./static/screenshots/${id}/${postcode}/${name}.jpg]`)
 
     page.close()
+  }).catch((e) => {
+    fs.readFile(`./storage/metadata/${id}.json`, 'utf8', (err, data) => {
+      if (err) console.log(`Cannot write to /storage/metadata/${id}.json`)
+      var obj = JSON.parse(data)
+      if (!obj.errors) obj.errors = {}
+      if (!obj.errors[postcode]) obj.errors[postcode] = []
+      obj.errors[postcode].push(name)
+      fs.writeFile(`./storage/metadata/${id}.json`, JSON.stringify(obj), 'utf8')
+    })
   })
 }
 
