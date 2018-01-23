@@ -2,53 +2,72 @@ import { Router } from 'express'
 const fs = require('fs')
 const btoa = require('btoa')
 const mkdirp = require('mkdirp')
-const pool = require('puppeteer-pool')({
-  puppeteerArgs: { args: [ '--no-sandbox' ] }
-})
+// const pool = require('puppeteer-pool')({
+//   puppeteerArgs: { args: [ '--no-sandbox' ] }
+// })
+const PromisePool = require('es6-promise-pool')
+const POOL_LIMIT = 5
+const puppeteer = require('puppeteer')
+
 const glob = require('glob')
 const archiver = require('archiver')
 const shortid = require('shortid')
 const scheduler = require('node-schedule')
 
-function screenshot (name, url, postcode, id, auth) {
-  pool.use(async (browser) => {
-    const page = await browser.newPage()
+const queue = []
 
-    if (auth) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)})
+let Browser
 
-    await page.setViewport({ width: 700, height: 600 })
-    const status = await page.goto(`${url}&postcode=${postcode}`)
-    if (!status.ok) {
-      throw new Error('cannot open ' + url)
-    }
+const screenshot = async (name, url, postcode, id, auth) => {
+  console.log('about to open a page')
+  const page = await Browser.newPage()
+  console.log('awaited a page')
+  if (auth) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)})
 
-    page.evaluate(function () {
-      $('body').css('background-color', '#fff') // eslint-disable-line
-      $('details').attr('open', 'true') // eslint-disable-line
-    })
+  await page.setViewport({ width: 700, height: 600 })
+  const status = await page.goto(`${url}&postcode=${postcode}`)
+  if (!status.ok) {
+    throw new Error('cannot open ' + url)
+  }
 
-    mkdirp(`./static/screenshots/${id}/${postcode}`) // Make sure folders exist, so no errors
-    await page.screenshot({ path: `./static/screenshots/${id}/${postcode}/${name}.jpg`, fullPage: true })
-
-    console.log(`File created at [./static/screenshots/${id}/${postcode}/${name}.jpg]`)
-
-    page.close()
-  }).catch((e) => {
-    fs.readFile(`./storage/metadata/${id}.json`, 'utf8', (err, data) => {
-      if (err) console.log(`Cannot write to /storage/metadata/${id}.json`)
-      var obj = JSON.parse(data)
-      if (!obj.errors) obj.errors = {}
-      if (!obj.errors[postcode]) obj.errors[postcode] = []
-      obj.errors[postcode].push(name)
-      fs.writeFile(`./storage/metadata/${id}.json`, JSON.stringify(obj), 'utf8')
-    })
+  page.evaluate(function () {
+    $('body').css('background-color', '#fff') // eslint-disable-line
+    $('details').attr('open', 'true') // eslint-disable-line
   })
+
+  mkdirp(`./static/screenshots/${id}/${postcode}`) // Make sure folders exist, so no errors
+  await page.screenshot({ path: `./static/screenshots/${id}/${postcode}/${name}.jpg`, fullPage: true })
+
+  console.log(`File created at [./static/screenshots/${id}/${postcode}/${name}.jpg]`)
+
+  await page.close()
+}
+// ).catch((e) => {
+//     fs.readFile(`./storage/metadata/${id}.json`, 'utf8', (err, data) => {
+//       if (err) console.log(`Cannot write to /storage/metadata/${id}.json`)
+//       var obj = JSON.parse(data)
+//       if (!obj.errors) obj.errors = {}
+//       if (!obj.errors[postcode]) obj.errors[postcode] = []
+//       obj.errors[postcode].push(name)
+//       fs.writeFile(`./storage/metadata/${id}.json`, JSON.stringify(obj), 'utf8')
+//     })
+// }
+
+const promiseProducer = () => {
+  const item = queue.pop()
+  return item ? screenshot(item.value, item.val, item.postcode, item.id, item.auth) : null
 }
 
 function screenshotByPostcode (postcode, urls, id, auth) {
   Object.keys(urls).forEach((value, index) => {
     let val = urls[value]
-    screenshot(value, val, postcode, id, auth)
+    queue.push({
+      value: value,
+      val: val,
+      postcode: postcode,
+      id: id,
+      auth: auth
+    })
   })
 }
 
@@ -141,6 +160,14 @@ router.post('/screenshot', function (req, res, next) {
   function screenshots () {
     postcodes.forEach((value, index) => {
       screenshotByPostcode(value, urls, data.id, data.auth)
+    })
+
+    puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
+      Browser = browser
+      const pool = new PromisePool(promiseProducer, POOL_LIMIT)
+      await pool.start()
+
+      await Browser.close()
     })
   }
 })
