@@ -2,9 +2,6 @@ import { Router } from 'express'
 const fs = require('fs')
 const btoa = require('btoa')
 const mkdirp = require('mkdirp')
-// const pool = require('puppeteer-pool')({
-//   puppeteerArgs: { args: [ '--no-sandbox' ] }
-// })
 const PromisePool = require('es6-promise-pool')
 const POOL_LIMIT = 5
 const puppeteer = require('puppeteer')
@@ -16,18 +13,45 @@ const scheduler = require('node-schedule')
 
 const queue = []
 
+const urls = {
+  'Dx02': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
+  'Dx03': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
+  'Dx05': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,2,3,2,2,0,0,0',
+  'Dx06': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,0',
+  'Dx07': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW519MaleAdult/40/Abdominalpain/?answers=6,2,1,2,3,4,2,3,2,3,2,2,3,2,2,0',
+  'Dx08': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/33/Headache/?answers=2,2,2,4,2,3,2,2,2,2,1,0,3',
+  'Dx11': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=2,2,2,0',
+  'Dx118': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=2,0,0,3,0',
+  'Dx12': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,2,2,2,0',
+  'Dx13': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,2,0,0,0,2,0',
+  'Dx14': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW519MaleAdult/40/AbdominalPain/?answers=6,2,2,4,2,3,2,3,2,2,3,2,2,3,3,2,2',
+  'Dx15': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,0,2,3,2,2',
+  'Dx17': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=2,4,0,0,0,2,0,0,2,0',
+  'Dx18': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,0,2,2',
+  'Dx19': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=1,2,0,0,0,0,2,2',
+  'Dx20': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=2,3,1,2,0,2,0',
+  'Dx21': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,2,0,4',
+  'Dx22': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=2,2,2,2,3,2,2,2,1,2',
+  'Dx28': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=2,2,1,2,2,2,2,2,2,3,0',
+  'Dx30': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,3,2,2,2,2,2',
+  'Dx31': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/33/Skin,Rash/?answers=2,2,2,3,2,2,2,2,2,0,2,2,3,0,2',
+  'Dx50': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,3,2,0,1,0,2,6,3,2',
+  'Dx60': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1146FemaleChild/6/Eye,Sticky,Watery/?answers=2,0,3,2,1,3,2,3,2,2,3,2,2,2,2',
+  'Dx89': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
+  'Dx92': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
+  'Dx94': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
+}
+
 let Browser
 
-const screenshot = async (name, url, postcode, id, auth) => {
-  console.log('about to open a page')
+const screenshot = async (opts) => {
   const page = await Browser.newPage()
-  console.log('awaited a page')
-  if (auth) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(auth.username + ':' + auth.password)})
+  if (opts.auth && opts.auth.username && opts.auth.password) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(opts.auth.username + ':' + opts.auth.password)})
 
   await page.setViewport({ width: 700, height: 600 })
-  const status = await page.goto(`${url}&postcode=${postcode}`)
+  const status = await page.goto(opts.url)
   if (!status.ok) {
-    throw new Error('cannot open ' + url)
+    throw new Error('cannot open ' + opts.url)
   }
 
   page.evaluate(function () {
@@ -35,40 +59,29 @@ const screenshot = async (name, url, postcode, id, auth) => {
     $('details').attr('open', 'true') // eslint-disable-line
   })
 
-  mkdirp(`./static/screenshots/${id}/${postcode}`) // Make sure folders exist, so no errors
-  await page.screenshot({ path: `./static/screenshots/${id}/${postcode}/${name}.jpg`, fullPage: true })
+  mkdirp(`./static/screenshots/${opts.id}/${opts.postcode}`) // Make sure folders exist, so no errors
+  await page.screenshot({ path: `./static/screenshots/${opts.id}/${opts.postcode}/${opts.name}.jpg`, fullPage: true })
 
-  console.log(`File created at [./static/screenshots/${id}/${postcode}/${name}.jpg]`)
+  console.log(`[${opts.id}] File created at [./static/screenshots/${opts.id}/${opts.postcode}/${opts.name}.jpg]`)
 
   await page.close()
 }
-// ).catch((e) => {
-//     fs.readFile(`./storage/metadata/${id}.json`, 'utf8', (err, data) => {
-//       if (err) console.log(`Cannot write to /storage/metadata/${id}.json`)
-//       var obj = JSON.parse(data)
-//       if (!obj.errors) obj.errors = {}
-//       if (!obj.errors[postcode]) obj.errors[postcode] = []
-//       obj.errors[postcode].push(name)
-//       fs.writeFile(`./storage/metadata/${id}.json`, JSON.stringify(obj), 'utf8')
-//     })
-// }
 
 const promiseProducer = () => {
   const item = queue.pop()
-  return item ? screenshot(item.value, item.val, item.postcode, item.id, item.auth) : null
-}
-
-function screenshotByPostcode (postcode, urls, id, auth) {
-  Object.keys(urls).forEach((value, index) => {
-    let val = urls[value]
-    queue.push({
-      value: value,
-      val: val,
-      postcode: postcode,
-      id: id,
-      auth: auth
+  if (!item) return null
+  return screenshot(item)
+    .catch((e) => {
+      fs.readFile(`./storage/metadata/${item.id}.json`, 'utf8', (err, data) => {
+        if (err) console.log(`Cannot write to /storage/metadata/${item.id}.json`)
+        var obj = JSON.parse(data)
+        if (!obj.errors) obj.errors = {}
+        if (!obj.errors[item.postcode]) obj.errors[item.postcode] = []
+        obj.errors[item.postcode].push(item.name)
+        fs.writeFile(`./storage/metadata/${item.id}.json`, JSON.stringify(obj), 'utf8')
+        console.log(`[${item.id}] Could not screenshot ${item.postcode} - ${item.name}`)
+      })
     })
-  })
 }
 
 const router = Router()
@@ -113,7 +126,7 @@ router.get('/screenshots/:id/zip', function (req, res, next) {
 
   // on stream closed we can end the request
   archive.on('end', function () {
-    console.log('Archive wrote %d bytes', archive.pointer())
+    console.log(`[${req.params.id}] Archive wrote ${archive.pointer()} bytes`)
   })
 
   // set the archive name
@@ -134,8 +147,8 @@ router.get('/screenshots/:id/zip', function (req, res, next) {
  */
 router.post('/screenshot', function (req, res, next) {
   const postcodes = req.body.postcodes
-  const urls = req.body.urls
-  if (!postcodes || !urls) return res.sendStatus(400)
+  const dxcodes = req.body.dxcodes
+  if (!postcodes || !dxcodes) return res.sendStatus(400)
   const data = req.body
   data.id = shortid.generate()
   data.date = new Date()
@@ -148,8 +161,6 @@ router.post('/screenshot', function (req, res, next) {
   mkdirp(`./storage/metadata/`)
   fs.writeFile(`./storage/metadata/${data.id}.json`, JSON.stringify(data), 'utf8')
 
-  console.log(req.body)
-
   let schedule = new Date(req.body.schedule)
   if (req.body.schedule && schedule > new Date()) {
     scheduler.scheduleJob(schedule, screenshots)
@@ -158,8 +169,17 @@ router.post('/screenshot', function (req, res, next) {
   }
 
   function screenshots () {
-    postcodes.forEach((value, index) => {
-      screenshotByPostcode(value, urls, data.id, data.auth)
+    postcodes.forEach((postcode, index) => {
+      dxcodes.forEach((dxcode, i) => {
+        queue.push({
+          name: dxcode,
+          url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}`,
+          postcode: postcode,
+          id: data.id,
+          auth: data.auth,
+          dos: data.dos
+        })
+      })
     })
 
     puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
