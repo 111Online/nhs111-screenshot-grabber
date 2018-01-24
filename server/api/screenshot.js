@@ -152,6 +152,11 @@ router.post('/screenshot', function (req, res, next) {
   const data = req.body
   data.id = shortid.generate()
   data.date = new Date()
+  data.urls = {}
+
+  dxcodes.forEach((dxcode, i) => {
+    data.urls[dxcode] = urls[dxcode]
+  })
 
   res.json({
     id: data.id

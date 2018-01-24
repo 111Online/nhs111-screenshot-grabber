@@ -17,6 +17,11 @@
           <p>{{schedule}}</p>
         </div>
 
+        <template v-if="metadata.dos">
+          <h3>DoS</h3>
+          <p>{{metadata.dos}}</p>
+        </template>
+
         <div v-if="metadata.errors">
           <h3>Errors</h3>
           <ul style="color: #b10e1e;">

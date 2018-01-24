@@ -8,12 +8,16 @@
     <form action="post" v-on:submit.prevent="submit">
 
       <label for="name">Name<p class="form-hint">Please enter your name</p></label>
-      <input type="text" id="name" v-model="name">
+      <input type="text" id="name" required v-model="name">
 
       <label for="postcodes">Postcodes <span class="count">({{postcodes_count}})</span><p class="form-hint">Please enter each postcode on a separate line</p></label>
-      <textarea v-model="postcodes" cols="20" id="postcodes" name="postcodes" placeholder="Postcodes" rows="5" class="feedback-input" style="resize: auto;"></textarea>
+      <textarea v-model="postcodes" cols="20" id="postcodes" name="postcodes" required placeholder="Postcodes" rows="5" class="feedback-input" style="resize: auto;"></textarea>
     
 
+      <label for="auth-user">Authorisation <p class="form-hint">Please enter the provider site username and password.</p></label>
+      <input id="auth-user" name="auth-user" class="form-textbox" required v-model="auth_user" placeholder="Username">
+      <input type="password" id="auth-password" name="auth-password" required class="form-textbox" v-model="auth_password" placeholder="Password">
+        
       <details>
         <summary><span class="details__arrow"></span> DoS</summary>
         <div>
@@ -42,15 +46,6 @@
 
       <!-- <label for="custom_urls">Custom URLs <span class="count">({{urls_count}})</span><p class="form-hint">Please enter each url on a separate line as [title] space [url], the title will be the name of the file</p></label>
       <textarea v-model="urls" cols="20" id="custom_urls" name="urls" placeholder="URLs" rows="5" class="feedback-input" style="resize: auto;"></textarea> -->
-
-      <details>
-        <summary><span class="details__arrow"></span> Authorisation</summary>
-        <div>
-          <label for="auth-user">Authorisation <span class="count">(optional)</span><p class="form-hint">URLs are sometimes password protected, if that is the case please enter the username and password.</p></label>
-          <input id="auth-user" name="auth-user" class="form-textbox" v-model="auth_user" placeholder="Username">
-          <input type="password" id="auth-password" name="auth-password" class="form-textbox" v-model="auth_password" placeholder="Password">
-        </div>
-      </details>
 
       <details>
         <summary><span class="details__arrow"></span> Schedule</summary>
