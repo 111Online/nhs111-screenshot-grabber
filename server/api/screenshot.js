@@ -54,10 +54,11 @@ const screenshot = async (opts) => {
     throw new Error('cannot open ' + opts.url)
   }
 
-  page.evaluate(function () {
+  page.evaluate((opts) => {
     $('body').css('background-color', '#fff') // eslint-disable-line
+    $('.global-header__inner').append(`<p style="float: right; font-weight: 600;">${opts.name}</p>`) // eslint-disable-line
     $('details').attr('open', 'true') // eslint-disable-line
-  })
+  }, opts)
 
   mkdirp(`./static/screenshots/${opts.id}/${opts.postcode}`) // Make sure folders exist, so no errors
   await page.screenshot({ path: `./static/screenshots/${opts.id}/${opts.postcode}/${opts.name}.jpg`, fullPage: true })
