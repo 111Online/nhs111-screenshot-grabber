@@ -99,14 +99,37 @@ router.get('/screenshots/metadata', function (req, res, next) {
 router.get('/screenshots/:id', function (req, res, next) {
   glob(`./static/screenshots/${req.params.id}/*/*.jpg`, {}, function (er, files) {
     let obj = {}
+    obj.screenshots = {}
+    obj.success_count = 0
+    obj.error_count = 0
+    obj.errors = {}
+
     files.forEach((value, index) => {
       let path = value.split('/')
       let filename = path[path.length - 1]
       let postcode = path[path.length - 2]
-      if (!obj[postcode]) obj[postcode] = []
-      obj[postcode].push(filename)
+      if (!obj.screenshots[postcode]) obj.screenshots[postcode] = []
+      obj.screenshots[postcode].push(filename)
+      obj.success_count += 1
     })
-    res.json(obj)
+
+    fs.readFile(`./storage/metadata/${req.params.id}.json`, 'utf8', (err, data) => {
+      if (err) return console.log(`Cannot read from /storage/metadata/${req.params.id}.json`)
+      data = JSON.parse(data)
+      if (data.errors) {
+        obj.errors = data.errors
+        let count = 0
+        Object.keys(data.errors).forEach((key) => {
+          count += data.errors[key].length
+        })
+        obj.error_count = count
+      } else {
+        obj.error_count = 0
+      }
+      obj.total_count = data.dxcodes.length * data.postcodes.length
+      obj.remaining = obj.total_count - obj.error_count - obj.success_count
+      res.json(obj)
+    })
   })
 })
 

@@ -6,6 +6,9 @@
     </div>
 
     <a class="button" :href="`/api/screenshots/${id}/zip`">Download all</a>
+    <div class="callout callout--info">
+      <p>{{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}% complete<template v-if="error_count">, with {{error_count}} failures.</template></p>
+    </div> 
 
     <div v-for="postcode in Object.keys(screenshots)">
       <h2>{{postcode}} <span class="count">({{screenshots[postcode].length}})</span></h2>
@@ -28,17 +31,15 @@ export default {
   data () {
     return {
       screenshots: [],
-      error: ''
+      total_count: 0,
+      remaining: 0,
+      error_count: 0,
+      error: '',
+      data_interval: null
     }
   },
   mounted () {
-    axios.get(`/api/screenshots/${this.id}`)
-      .then((response) => {
-        this.screenshots = response.data
-      })
-      .catch((e) => {
-        this.error = e.response.statusText
-      })
+    this.getData()
   },
   head () {
     return {
@@ -48,6 +49,20 @@ export default {
   methods: {
     removeExt: (filename) => {
       return filename.split('.')[0]
+    },
+    getData: function () {
+      axios.get(`/api/screenshots/${this.$route.params.id}`)
+        .then((response) => {
+          this.screenshots = response.data.screenshots
+          this.total_count = response.data.total_count
+          this.error_count = response.data.error_count
+          this.remaining = response.data.remaining
+          if (!this.remaining && this.data_interval) clearInterval(this.data_interval)
+          else if (this.remaining > 0 && !this.data_interval) this.data_interval = setInterval(this.getData, 2000)
+        })
+        .catch((e) => {
+          this.error = e.response.statusText
+        })
     }
   },
   computed: {
