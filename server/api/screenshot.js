@@ -13,33 +13,35 @@ const scheduler = require('node-schedule')
 
 const queue = []
 
+const baseurl = 'https://providersite.staging.111.service.nhs.uk'
+
 const urls = {
-  'Dx02': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
-  'Dx03': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
-  'Dx05': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,2,3,2,2,0,0,0',
-  'Dx06': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,0',
-  'Dx07': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW519MaleAdult/40/Abdominalpain/?answers=6,2,1,2,3,4,2,3,2,3,2,2,3,2,2,0',
-  'Dx08': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/33/Headache/?answers=2,2,2,4,2,3,2,2,2,2,1,0,3',
-  'Dx11': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=2,2,2,0',
-  'Dx118': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=2,0,0,3,0',
-  'Dx12': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,2,2,2,0',
-  'Dx13': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,2,0,0,0,2,0',
-  'Dx14': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW519MaleAdult/40/AbdominalPain/?answers=6,2,2,4,2,3,2,3,2,2,3,2,2,3,3,2,2',
-  'Dx15': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,0,2,3,2,2',
-  'Dx17': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=2,4,0,0,0,2,0,0,2,0',
-  'Dx18': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,0,2,2',
-  'Dx19': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=1,2,0,0,0,0,2,2',
-  'Dx20': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=2,3,1,2,0,2,0',
-  'Dx21': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,2,0,4',
-  'Dx22': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=2,2,2,2,3,2,2,2,1,2',
-  'Dx28': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=2,2,1,2,2,2,2,2,2,3,0',
-  'Dx30': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,3,2,2,2,2,2',
-  'Dx31': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1620MaleAdult/33/Skin,Rash/?answers=2,2,2,3,2,2,2,2,2,0,2,2,3,0,2',
-  'Dx50': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,3,2,0,1,0,2,6,3,2',
-  'Dx60': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1146FemaleChild/6/Eye,Sticky,Watery/?answers=2,0,3,2,1,3,2,3,2,2,3,2,2,2,2',
-  'Dx89': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
-  'Dx92': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
-  'Dx94': 'http://nhs111-web-beta-provider-test.azurewebsites.net//question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
+  'Dx02': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
+  'Dx03': baseurl + '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
+  'Dx05': baseurl + '/question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,2,3,2,2,0,0,0',
+  'Dx06': baseurl + '/question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,0',
+  'Dx07': baseurl + '/question/direct/PW519MaleAdult/40/Abdominalpain/?answers=6,2,1,2,3,4,2,3,2,3,2,2,3,2,2,0',
+  'Dx08': baseurl + '/question/direct/PW755MaleAdult/33/Headache/?answers=2,2,2,4,2,3,2,2,2,2,1,0,3',
+  'Dx11': baseurl + '/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=2,2,2,0',
+  'Dx118': baseurl + '/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=2,0,0,3,0',
+  'Dx12': baseurl + '/question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,2,2,2,0',
+  'Dx13': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,2,0,0,0,2,0',
+  'Dx14': baseurl + '/question/direct/PW519MaleAdult/40/AbdominalPain/?answers=6,2,2,4,2,3,2,3,2,2,3,2,2,3,3,2,2',
+  'Dx15': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,0,2,3,2,2',
+  'Dx17': baseurl + '/question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=2,4,0,0,0,2,0,0,2,0',
+  'Dx18': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,0,2,2',
+  'Dx19': baseurl + '/question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=1,2,0,0,0,0,2,2',
+  'Dx20': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=2,3,1,2,0,2,0',
+  'Dx21': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,2,0,4',
+  'Dx22': baseurl + '/question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=2,2,2,2,3,2,2,2,1,2',
+  'Dx28': baseurl + '/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=2,2,1,2,2,2,2,2,2,3,0',
+  'Dx30': baseurl + '/question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,3,2,2,2,2,2',
+  'Dx31': baseurl + '/question/direct/PW1620MaleAdult/33/Skin,Rash/?answers=2,2,2,3,2,2,2,2,2,0,2,2,3,0,2',
+  'Dx50': baseurl + '/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,3,2,0,1,0,2,6,3,2',
+  'Dx60': baseurl + '/question/direct/PW1146FemaleChild/6/Eye,Sticky,Watery/?answers=2,0,3,2,1,3,2,3,2,2,3,2,2,2,2',
+  'Dx89': baseurl + '/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
+  'Dx92': baseurl + '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
+  'Dx94': baseurl + '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
 }
 
 let Browser
@@ -192,33 +194,38 @@ router.post('/screenshot', function (req, res, next) {
 
   let schedule = new Date(req.body.schedule)
   if (req.body.schedule && schedule > new Date()) {
-    scheduler.scheduleJob(schedule, screenshots)
-  } else {
-    screenshots()
-  }
-
-  function screenshots () {
-    postcodes.forEach((postcode, index) => {
-      dxcodes.forEach((dxcode, i) => {
-        queue.push({
-          name: dxcode,
-          url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}`,
-          postcode: postcode,
-          id: data.id,
-          auth: data.auth,
-          dos: data.dos
-        })
+    scheduler.scheduleJob(schedule, () => {
+      fs.readFile(`./storage/metadata/${req.params.id}.json`, 'utf8', (err, data) => {
+        if (err) console.log(`[${data.id}] error reading from scheduler`)
       })
+      screenshots(postcodes, dxcodes, { dos: data.dos })
     })
-
-    puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
-      Browser = browser
-      const pool = new PromisePool(promiseProducer, POOL_LIMIT)
-      await pool.start()
-
-      await Browser.close()
-    })
+  } else {
+    screenshots(postcodes, dxcodes, data)
   }
 })
+
+function screenshots (postcodes, dxcodes, opts) {
+  postcodes.forEach((postcode, index) => {
+    dxcodes.forEach((dxcode, i) => {
+      queue.push({
+        name: dxcode,
+        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${opts.dos}`,
+        postcode: postcode,
+        id: opts.id,
+        auth: opts.auth,
+        dos: opts.dos
+      })
+    })
+  })
+
+  puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
+    Browser = browser
+    const pool = new PromisePool(promiseProducer, POOL_LIMIT)
+    await pool.start()
+
+    await Browser.close()
+  })
+}
 
 export default router
