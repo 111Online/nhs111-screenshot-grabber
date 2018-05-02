@@ -36,7 +36,7 @@
           <button class="button--link" type="button" v-on:click="dx_select_all">Select all</button> 
           <button class="button--link" style="margin-left: 15px" type="button" v-on:click="dx_select_none">Select none</button>
 
-          <div class="grid">
+          <div class="grid grid-dxcodes">
             <template v-for="(dx, i) in dxcodes">
               <div><input type="checkbox" :value="dx" :checked="dxcustom[i]" v-on:click="dxcustom[i] = !dxcustom[i]; dx_count()" :id="dx"><label :for="dx">{{dx}}</label></div>
             </template>
@@ -196,5 +196,9 @@ export default {
     .grid {
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
+  }
+  
+  .grid-dxcodes div {
+    position: relative;
   }
 </style>
