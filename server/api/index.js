@@ -132,8 +132,8 @@ router.get('/screenshots/:id', function (req, res, next) {
         obj.remaining = obj.total_count - obj.error_count - obj.success_count
         res.json(obj)
       } else {
-        obj.total_count = data.dxcodes.length * data.postcodes.length
-        obj.remaining = obj.total_count - obj.success_count
+        obj.total_count = 1
+        obj.remaining = 1
         res.json(obj)
       }
     })
