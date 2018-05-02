@@ -114,21 +114,28 @@ router.get('/screenshots/:id', function (req, res, next) {
     })
 
     database.getMetadata(req.params.id).then((data) => {
-      Object.assign(data, JSON.parse(data.data))
-      delete data['data']
-      if (data.errors) {
-        obj.errors = data.errors
-        let count = 0
-        Object.keys(data.errors).forEach((key) => {
-          count += data.errors[key].length
-        })
-        obj.error_count = count
+      // Temp fix, if data isn't in database yet
+      if (data) {
+        Object.assign(data, JSON.parse(data.data))
+        delete data['data']
+        if (data.errors) {
+          obj.errors = data.errors
+          let count = 0
+          Object.keys(data.errors).forEach((key) => {
+            count += data.errors[key].length
+          })
+          obj.error_count = count
+        } else {
+          obj.error_count = 0
+        }
+        obj.total_count = data.dxcodes.length * data.postcodes.length
+        obj.remaining = obj.total_count - obj.error_count - obj.success_count
+        res.json(obj)
       } else {
-        obj.error_count = 0
+        obj.total_count = data.dxcodes.length * data.postcodes.length
+        obj.remaining = obj.total_count - obj.success_count
+        res.json(obj)
       }
-      obj.total_count = data.dxcodes.length * data.postcodes.length
-      obj.remaining = obj.total_count - obj.error_count - obj.success_count
-      res.json(obj)
     })
   })
 })
