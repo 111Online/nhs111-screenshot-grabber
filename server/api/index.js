@@ -17,7 +17,7 @@ const queue = []
 const baseurl = 'https://providersite.staging.111.service.nhs.uk'
 
 const urls = {
-  'Dx02': baseurl + '/broken/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
+  'Dx02': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
   'Dx03': baseurl + '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
   'Dx05': baseurl + '/question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,2,3,2,2,0,0,0',
   'Dx06': baseurl + '/question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,0',
@@ -183,6 +183,7 @@ router.post('/screenshot', function (req, res, next) {
   data.id = shortid.generate()
   data.date = new Date()
   data.urls = {}
+  data.schedule = new Date(req.body.schedule)
 
   dxcodes.forEach((dxcode, i) => {
     data.urls[dxcode] = urls[dxcode]
@@ -195,13 +196,9 @@ router.post('/screenshot', function (req, res, next) {
   mkdirp(`./static/screenshots/${data.id}`)
   database.insertMetadata(data)
 
-  let schedule = new Date(req.body.schedule)
-  if (req.body.schedule && schedule > new Date()) {
-    scheduler.scheduleJob(schedule, () => {
-      // fs.readFile(`./storage/metadata/${req.params.id}.json`, 'utf8', (err, data) => {
-      //   if (err) console.log(`[${data.id}] error reading from scheduler`)
-      // })
-      screenshots(postcodes, dxcodes, { dos: data.dos })
+  if (req.body.schedule && data.schedule > new Date()) {
+    scheduler.scheduleJob(data.schedule, () => {
+      screenshots(postcodes, dxcodes, data)
     })
   } else {
     screenshots(postcodes, dxcodes, data)
