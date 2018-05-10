@@ -93,20 +93,22 @@ export default {
     },
     sortByID: function () {
       this.items.sort((a, b) => {
-        if (!this.sortIDToggle) return a.id < b.id
-        else return a.id > b.id
+        if (!this.sortIDToggle) return a.id < b.id ? 1 : -1
+        else return a.id > b.id ? 1 : -1
       })
     },
     sortByName: function () {
       this.items.sort((a, b) => {
-        if (!this.sortNameToggle) return a.name < b.name
-        else return a.name > b.name
+        if (!this.sortNameToggle) return a.name < b.name ? 1 : -1
+        else return a.name > b.name ? 1 : -1
       })
     },
     sortByDate: function () {
+      console.log('sort by date')
       this.items.sort((a, b) => {
-        if (!this.sortDateToggle) return a.date < b.date
-        else return a.date > b.date
+        console.log(a.date, b.date, new Date(a.date) < new Date(b.date))
+        if (!this.sortDateToggle) return new Date(a.date) < new Date(b.date) ? 1 : -1
+        else return new Date(a.date) > new Date(b.date) ? 1 : -1
       })
     }
   }
