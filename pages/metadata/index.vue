@@ -104,9 +104,7 @@ export default {
       })
     },
     sortByDate: function () {
-      console.log('sort by date')
       this.items.sort((a, b) => {
-        console.log(a.date, b.date, new Date(a.date) < new Date(b.date))
         if (!this.sortDateToggle) return new Date(a.date) < new Date(b.date) ? 1 : -1
         else return new Date(a.date) > new Date(b.date) ? 1 : -1
       })
