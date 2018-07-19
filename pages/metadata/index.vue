@@ -43,7 +43,6 @@ export default {
   mounted () {
     axios.get(`/api/screenshots/metadata`)
       .then((response) => {
-        debugger // eslint-disable-line
         this.items = response.data
         this.sortDateToggle = false
         this.sortByDate()
