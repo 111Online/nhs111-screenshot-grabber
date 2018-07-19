@@ -47,13 +47,12 @@ const urls = {
 
 let Browser
 
-const screenshot = async (opts) => {
-  const page = await Browser.newPage()
+const screenshot = async (opts, page) => {
   if (opts.auth && opts.auth.username && opts.auth.password) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(opts.auth.username + ':' + opts.auth.password)})
-
   await page.setViewport({ width: 700, height: 600 })
   const status = await page.goto(opts.url)
   if (!status.ok) {
+    await page.close()
     throw new Error('cannot open ' + opts.url)
   }
 
@@ -71,11 +70,13 @@ const screenshot = async (opts) => {
   await page.close()
 }
 
-const promiseProducer = () => {
+const promiseProducer = async () => {
   const item = queue.pop()
   if (!item) return null
-  return screenshot(item)
+  const page = await Browser.newPage()
+  return screenshot(item, page)
     .catch((e) => {
+      page.close()
       database.getMetadata(item.id).then((data) => {
         Object.assign(data, JSON.parse(data.data))
         delete data['data']
@@ -145,7 +146,7 @@ router.get('/screenshots/:id/metadata', function (req, res, next) {
     if (!data) return res.sendStatus(500)
 
     // There is a chunk of data stored in a column in the database called data
-    // The colum contains JSON, this then parses the JSON and adds it to the main
+    // The column contains JSON, this then parses the JSON and adds it to the main
     // object returned from database. It then removed data.data.
     Object.assign(data, JSON.parse(data.data))
     delete data['data']
@@ -226,13 +227,15 @@ function screenshots (postcodes, dxcodes, opts) {
     })
   })
 
-  puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
-    Browser = browser
-    const pool = new PromisePool(promiseProducer, POOL_LIMIT)
-    await pool.start()
+  if (!Browser) {
+    puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
+      Browser = browser
+      const pool = new PromisePool(promiseProducer, POOL_LIMIT)
+      await pool.start()
 
-    await Browser.close()
-  })
+      await Browser.close()
+    })
+  }
 }
 
 export default router
