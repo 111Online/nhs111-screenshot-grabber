@@ -52,7 +52,7 @@ const screenshot = async (opts, page) => {
   await page.setViewport({ width: 700, height: 600 })
   const status = await page.goto(opts.url)
   if (!status.ok) {
-    await page.close()
+    if (page && !page.isClosed()) await page.close()
     throw new Error('cannot open ' + opts.url)
   }
 
@@ -67,26 +67,27 @@ const screenshot = async (opts, page) => {
 
   console.log(`[${opts.id}] File created at [./static/screenshots/${opts.id}/${opts.postcode}/${opts.name}.jpg]`)
 
-  await page.close()
+  if (page && !page.isClosed()) await page.close()
 }
 
-const promiseProducer = async () => {
+const promiseProducer = () => {
   const item = queue.pop()
   if (!item) return null
-  const page = await Browser.newPage()
-  return screenshot(item, page)
-    .catch((e) => {
-      if (page) page.close()
-      database.getMetadata(item.id).then((data) => {
-        Object.assign(data, JSON.parse(data.data))
-        delete data['data']
-        if (!data.errors) data.errors = {}
-        if (!data.errors[item.postcode]) data.errors[item.postcode] = []
-        data.errors[item.postcode].push(item.name)
-        database.insertMetadata(data)
-        console.log(`[${item.id}] Could not screenshot ${item.postcode} - ${item.name}`)
+  return Browser.newPage().then((page) => {
+    return screenshot(item, page)
+      .catch(async (e) => {
+        if (page && !page.isClosed()) await page.close()
+        database.getMetadata(item.id).then((data) => {
+          Object.assign(data, JSON.parse(data.data))
+          delete data['data']
+          if (!data.errors) data.errors = {}
+          if (!data.errors[item.postcode]) data.errors[item.postcode] = []
+          data.errors[item.postcode].push(item.name)
+          database.insertMetadata(data)
+          console.log(`[${item.id}] Could not screenshot ${item.postcode} - ${item.name}`)
+        })
       })
-    })
+  })
 }
 
 const router = Router()
@@ -235,6 +236,9 @@ function screenshots (postcodes, dxcodes, opts) {
 
       await Browser.close()
     })
+  } else {
+    const pool = new PromisePool(promiseProducer, POOL_LIMIT)
+    pool.start()
   }
 }
 

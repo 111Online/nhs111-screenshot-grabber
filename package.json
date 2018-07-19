@@ -23,6 +23,7 @@
     "glob": "^7.1.2",
     "node-schedule": "^1.2.5",
     "nuxt": "^1.0.0-rc3",
+    "puppeteer": "^1.6.0",
     "puppeteer-pool": "^1.0.3",
     "shortid": "^2.2.8",
     "source-map-support": "^0.4.15",
