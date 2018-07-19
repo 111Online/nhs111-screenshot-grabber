@@ -76,7 +76,7 @@ const promiseProducer = async () => {
   const page = await Browser.newPage()
   return screenshot(item, page)
     .catch((e) => {
-      page.close()
+      if (page) page.close()
       database.getMetadata(item.id).then((data) => {
         Object.assign(data, JSON.parse(data.data))
         delete data['data']

@@ -132,7 +132,7 @@ export default {
       axios.post('/api/screenshot', {
         postcodes,
         urls: urlobj,
-        name: this.name,
+        name: this.name.replace(/'/g, ''),
         schedule: this.schedule,
         auth: { username: this.auth_user, password: this.auth_password },
         dos: this.dos,

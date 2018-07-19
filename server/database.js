@@ -12,7 +12,7 @@ const getMetadata = async function (id) {
 
 const insertMetadata = async function (data) {
   const db = await dbPromise
-  db.run(`INSERT OR REPLACE INTO Metadata (id, name, schedule, dos, data, date) VALUES ('${data.id}', '${data.name}', '${data.schedule || ''}', '${data.dos}', '${JSON.stringify({ urls: data.urls, dxcodes: data.dxcodes, postcodes: data.postcodes, errors: data.errors })}', '${data.date}');`)
+  db.run('INSERT OR REPLACE INTO Metadata (id, name, schedule, dos, data, date) VALUES (?, ?, ?, ?, ?, ?);', [ data.id, data.name, data.schedule || '', data.dos, JSON.stringify({ urls: data.urls, dxcodes: data.dxcodes, postcodes: data.postcodes, errors: data.errors }), data.date.toString() ])
 }
 
 export default { getMetadata, insertMetadata }
