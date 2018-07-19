@@ -228,18 +228,13 @@ function screenshots (postcodes, dxcodes, opts) {
     })
   })
 
-  if (!Browser) {
-    puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
-      Browser = browser
-      const pool = new PromisePool(promiseProducer, POOL_LIMIT)
-      await pool.start()
-
-      await Browser.close()
-    })
-  } else {
+  puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
+    Browser = browser
     const pool = new PromisePool(promiseProducer, POOL_LIMIT)
-    pool.start()
-  }
+    await pool.start()
+
+    await Browser.close()
+  })
 }
 
 export default router
