@@ -81,7 +81,7 @@ export default {
       schedule_time: '',
       auth_user: '',
       auth_password: '',
-      dos: 'uat'
+      dos: 'live'
     }
   },
   head () {
