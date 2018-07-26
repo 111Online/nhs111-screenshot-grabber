@@ -1,5 +1,4 @@
 import { Router } from 'express'
-const fs = require('fs')
 const btoa = require('btoa')
 const mkdirp = require('mkdirp')
 const PromisePool = require('es6-promise-pool')

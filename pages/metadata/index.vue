@@ -10,11 +10,12 @@
         <tr>
           <th @click="toggleID">ID {{ sortIDToggle !== null ? ( sortIDToggle ? '▲' : '▼') : '' }}</th>
           <th @click="toggleDate">Date {{ sortDateToggle !== null ? ( sortDateToggle ? '▲' : '▼' ) : '' }}</th>
+          <th @click="toggleScheduledDate">Scheduled Date {{ sortScheduledDateToggle !== null ? ( sortScheduledDateToggle ? '▲' : '▼' ) : '' }}</th>
           <th @click="toggleName">Name {{ sortNameToggle !== null ? ( sortNameToggle ? '▲' : '▼' ) : '' }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in pageItems"><td><a :href="`/metadata/${item.id}`">{{item.id}}</a></td><td>{{date(item.date)}}</td><td>{{item.name}}</td></tr>
+        <tr v-for="item in pageItems"><td><a :href="`/metadata/${item.id}`">{{item.id}}</a></td><td>{{date(item.date)}}</td><td>{{ date(item.schedule) }}</td><td>{{item.name}}</td></tr>
       </tbody>
     </table>
     <div class="pagination">
@@ -37,7 +38,8 @@ export default {
       currentPage: 1,
       sortIDToggle: null,
       sortNameToggle: null,
-      sortDateToggle: null
+      sortDateToggle: null,
+      sortScheduledDateToggle: null
     }
   },
   mounted () {
@@ -68,13 +70,27 @@ export default {
   },
   methods: {
     date: function (date) {
-      return new Date(date).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      var dateObj = this.getValidDate(date)
+      if (dateObj == null) return ''
+      else return dateObj.toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    },
+    getValidDate: function (date) {
+      if (date == null || date === '') return null
+
+      var dateObj = new Date(date)
+      if (Number.isNaN(dateObj.valueOf())) {
+        // Invalid date, may have been passed through as number so try that
+        dateObj = new Date(Number(date))
+        if (Number.isNaN(dateObj.valueOf())) return null
+      }
+      return dateObj
     },
     toggleID: function () {
       if (this.sortIDToggle !== null) this.sortIDToggle = !this.sortIDToggle
       else this.sortIDToggle = true
       this.sortNameToggle = null
       this.sortDateToggle = null
+      this.sortScheduledDateToggle = null
       this.sortByID()
     },
     toggleName: function () {
@@ -82,6 +98,7 @@ export default {
       else this.sortNameToggle = true
       this.sortIDToggle = null
       this.sortDateToggle = null
+      this.sortScheduledDateToggle = null
       this.sortByName()
     },
     toggleDate: function () {
@@ -89,7 +106,16 @@ export default {
       else this.sortDateToggle = true
       this.sortIDToggle = null
       this.sortNameToggle = null
+      this.sortScheduledDateToggle = null
       this.sortByDate()
+    },
+    toggleScheduledDate: function () {
+      if (this.sortScheduledDateToggle !== null) this.sortScheduledDateToggle = !this.sortScheduledDateToggle
+      else this.sortScheduledDateToggle = true
+      this.sortIDToggle = null
+      this.sortNameToggle = null
+      this.sortDateToggle = null
+      this.sortByScheduledDate()
     },
     sortByID: function () {
       this.items.sort((a, b) => {
@@ -107,6 +133,22 @@ export default {
       this.items.sort((a, b) => {
         if (!this.sortDateToggle) return new Date(a.date) < new Date(b.date) ? 1 : -1
         else return new Date(a.date) > new Date(b.date) ? 1 : -1
+      })
+    },
+    sortByScheduledDate: function () {
+      this.items.sort((a, b) => {
+        var dateA = this.getValidDate(a.schedule)
+        var dateB = this.getValidDate(b.schedule)
+        if (!dateA && !dateB) return 0
+        if (!dateA || !dateB) {
+          if (!dateA) return 1
+          if (!dateB) return -1
+        }
+
+        var result = null
+        if (!this.sortScheduledDateToggle) result = dateA < dateB ? 1 : -1
+        else result = dateA > dateB ? 1 : -1
+        return result
       })
     }
   }
