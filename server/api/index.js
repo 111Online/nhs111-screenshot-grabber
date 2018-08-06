@@ -67,10 +67,36 @@ const screenshot = async (opts, page) => {
   console.log(`[${opts.id}] File created at [./static/screenshots/${opts.id}/${opts.postcode}/${opts.name}.jpg]`)
 
   if (page && !page.isClosed()) await page.close()
+
+  if (opts.finished) {
+    // This is the last item in the run, so tell database that it is finished
+    database.finishedScreenshots(opts.id, new Date())
+  }
+}
+
+const findQueueItem = () => {
+  // The queue is empty
+  if (queue.length === 0) return null
+
+  // The run has been finished, check next run
+  if (queue[0].length === 0) {
+    queue.splice(0, 1)
+    return findQueueItem()
+  }
+
+  // Last item in run, tell database it is finished once item is done
+  if (queue[0].length === 1) {
+    var item = queue[0].pop()
+    item.finished = true
+    return item
+  }
+
+  // Get the next in queue
+  return queue[0].pop()
 }
 
 const promiseProducer = () => {
-  const item = queue.pop()
+  const item = findQueueItem()
   if (!item) return null
   return Browser.newPage().then((page) => {
     return screenshot(item, page)
@@ -93,7 +119,7 @@ const router = Router()
 
 router.get('/screenshots/metadata', function (req, res, next) {
   database.getMetadata().then((data) => {
-    if (data) res.json(data.map((val) => ({ id: val.id, date: val.date, name: val.name, schedule: val.schedule })))
+    res.json(data)
   })
 })
 
@@ -115,6 +141,8 @@ router.get('/screenshots/:id', function (req, res, next) {
     })
 
     database.getMetadata(req.params.id).then((data) => {
+      obj.schedule = data.schedule
+      obj.date = data.date
       // Temp fix, if data isn't in database yet
       if (data) {
         Object.assign(data, JSON.parse(data.data))
@@ -154,6 +182,11 @@ router.get('/screenshots/:id/metadata', function (req, res, next) {
   })
 })
 
+router.get('/screenshots/:id/cancel', function (req, res, next) {
+  database.cancelSchedule(req.params.id)
+  return res.status(200)
+})
+
 router.get('/screenshots/:id/zip', function (req, res, next) {
   const archive = archiver('zip')
   archive.on('error', function (err) {
@@ -191,7 +224,7 @@ router.post('/screenshot', function (req, res, next) {
   data.id = shortid.generate()
   data.date = new Date()
   data.urls = {}
-  data.schedule = new Date(req.body.schedule)
+  data.schedule = req.body.schedule ? new Date(req.body.schedule) : data.date
 
   dxcodes.forEach((dxcode, i) => {
     data.urls[dxcode] = urls[dxcode]
@@ -204,28 +237,41 @@ router.post('/screenshot', function (req, res, next) {
   mkdirp(`./static/screenshots/${data.id}`)
   database.insertMetadata(data)
 
-  if (req.body.schedule && data.schedule > new Date()) {
-    scheduler.scheduleJob(data.schedule, () => {
-      screenshots(postcodes, dxcodes, data)
-    })
-  } else {
-    screenshots(postcodes, dxcodes, data)
+  if (!req.body.schedule || data.schedule <= new Date()) {
+    screenshots(data)
   }
 })
 
-function screenshots (postcodes, dxcodes, opts) {
-  postcodes.forEach((postcode, index) => {
-    dxcodes.forEach((dxcode, i) => {
-      queue.push({
+router.get('/schedule', function (req, res, next) {
+  database.getAllScheduled().then((scheduleQueue) => {
+    res.json(scheduleQueue)
+  })
+})
+
+router.get('/schedule/now', function (req, res, next) {
+  database.getScheduled().then((scheduleQueue) => {
+    res.json(scheduleQueue)
+  })
+})
+
+function screenshots (data) {
+  if (!data.postcodes || !data.dxcodes) return
+  database.startScreenshots(data.id, new Date())
+  var q = []
+  data.postcodes.forEach((postcode, index) => {
+    data.dxcodes.forEach((dxcode, i) => {
+      q.push({
         name: dxcode,
-        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${opts.dos}`,
+        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}`,
         postcode: postcode,
-        id: opts.id,
-        auth: opts.auth,
-        dos: opts.dos
+        id: data.id,
+        auth: data.auth,
+        dos: data.dos
       })
     })
   })
+
+  queue.push(q)
 
   puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
     Browser = browser
@@ -235,5 +281,12 @@ function screenshots (postcodes, dxcodes, opts) {
     await Browser.close()
   })
 }
+
+scheduler.scheduleJob('*/1 * * * *', () => {
+  var scheduleQueue = database.getScheduled()
+  scheduleQueue.then((schedule) => {
+    if (schedule) schedule.forEach((val) => screenshots(Object.assign(val, JSON.parse(val.data))))
+  })
+})
 
 export default router

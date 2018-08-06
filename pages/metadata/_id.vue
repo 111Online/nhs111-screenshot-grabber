@@ -9,13 +9,15 @@
         <h3>Name</h3>
         <p>{{metadata.name}}</p>
         
-        <h3>Date</h3>
-        <p>{{date}}</p>
-        
-        <div v-if="schedule">
-          <h3>Scheduled</h3>
-          <p>{{schedule}}</p>
-        </div>
+        <h3>Details</h3>
+        <p>
+          Created: {{ date }}<br>
+          Scheduled: {{ schedule || "straight away" }} <button v-if="!metadata.start_time && !metadata.cancelled" class="button--link" style="margin-left: 10px; margin-top: 0;" @click="unschedule">unschedule</button>
+          <template v-if="metadata.start_time"><br>Start time: {{ metadata.start_time }}</template>
+          <template v-if="metadata.finish_time"><br>Finish time: {{ metadata.finish_time }}</template>
+          <template v-if="remaining !== null"><br>Complete: {{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}%</template>
+          <template v-if="error_count"><br>Errors: {{error_count}} failures.</template>
+        </p>
 
         <template v-if="metadata.dos">
           <h3>DoS</h3>
@@ -59,10 +61,15 @@ export default {
   data () {
     return {
       error: '',
-      metadata: {}
+      metadata: {},
+      data_interval: null,
+      total_count: 0,
+      remaining: null,
+      error_count: 0
     }
   },
   mounted () {
+    this.getData()
     axios.get(`/api/screenshots/${this.id}/metadata`)
       .then((response) => {
         this.metadata = response.data
@@ -77,6 +84,19 @@ export default {
     }
   },
   methods: {
+    getData: function () {
+      axios.get(`/api/screenshots/${this.$route.params.id}/metadata`)
+        .then((response) => {
+          this.metadata = response.data
+        })
+        .catch((e) => {
+          this.error = e.response.statusText
+        })
+    },
+    unschedule: function () {
+      axios.get(`/api/screenshots/${this.$route.params.id}/cancel`)
+      this.getData()
+    }
   },
   computed: {
     id: function () {
@@ -86,6 +106,7 @@ export default {
       return new Date(this.metadata.date).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     },
     schedule: function () {
+      if (this.metadata.cancelled) return 'Cancelled (was ' + new Date(this.metadata.schedule).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ')'
       return this.metadata.schedule ? new Date(this.metadata.schedule).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''
     }
   }

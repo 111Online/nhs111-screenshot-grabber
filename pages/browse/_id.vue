@@ -7,7 +7,12 @@
 
     <a class="button" :href="`/api/screenshots/${id}/zip`">Download all</a>
     <div class="callout callout--info">
-      <p>{{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}% complete<template v-if="error_count">, with {{error_count}} failures.</template></p>
+      <p>
+        Created: {{ date }}<br>
+        Scheduled: {{ schedule || "straight away" }}<br>
+        Complete: {{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}%
+        <template v-if="error_count"><br>Errors: {{error_count}} failures.</template>
+      </p>
     </div> 
 
     <div v-for="postcode in Object.keys(screenshots)">
@@ -30,6 +35,8 @@ import axios from '~/plugins/axios'
 export default {
   data () {
     return {
+      date: null,
+      schedule: null,
       screenshots: [],
       total_count: 0,
       remaining: 0,
@@ -53,6 +60,8 @@ export default {
     getData: function () {
       axios.get(`/api/screenshots/${this.$route.params.id}`)
         .then((response) => {
+          this.date = response.data.date
+          this.schedule = response.data.schedule
           this.screenshots = response.data.screenshots
           this.total_count = response.data.total_count
           this.error_count = response.data.error_count

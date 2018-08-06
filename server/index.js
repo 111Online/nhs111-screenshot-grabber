@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const host = process.env.HOST || '0.0.0.0'
 const port = process.env.PORT || 3000
+process.env.TZ = 'Europe/London'
 
 app.set('port', port)
 

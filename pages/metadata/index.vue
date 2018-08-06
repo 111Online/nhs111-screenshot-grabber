@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in pageItems"><td><a :href="`/metadata/${item.id}`">{{item.id}}</a></td><td>{{date(item.date)}}</td><td>{{ date(item.schedule) }}</td><td>{{item.name}}</td></tr>
+        <tr v-for="item in pageItems" :key="item.id" :class="{ strike: item.cancelled }" ><td><a :href="`/metadata/${item.id}`">{{item.id}}</a></td><td>{{date(item.date)}}</td><td>{{  date(item.schedule) === date(item.date) ? '' : date(item.schedule) }}</td><td>{{item.name}}</td></tr>
       </tbody>
     </table>
     <div class="pagination">
@@ -60,9 +60,11 @@ export default {
   },
   computed: {
     pageItems: function () {
+      if (this.items.length === undefined) return [this.items]
       return this.items.slice(((this.currentPage - 1) * this.pageSize), (this.currentPage * this.pageSize))
     },
     pageCount: function () {
+      if (this.items.length === undefined) return 1
       var count = Math.ceil(this.items.length / this.pageSize)
       if (count > 0) return count
       else return count + 1
@@ -76,7 +78,6 @@ export default {
     },
     getValidDate: function (date) {
       if (date == null || date === '') return null
-
       var dateObj = new Date(date)
       if (Number.isNaN(dateObj.valueOf())) {
         // Invalid date, may have been passed through as number so try that
@@ -137,8 +138,12 @@ export default {
     },
     sortByScheduledDate: function () {
       this.items.sort((a, b) => {
+        // It should be expected that many items will not have a scheduled date
+        // so this ensures blank rows are always at the bottom
         var dateA = this.getValidDate(a.schedule)
         var dateB = this.getValidDate(b.schedule)
+        if (a.schedule === a.date) dateA = null
+        if (b.schedule === b.date) dateB = null
         if (!dateA && !dateB) return 0
         if (!dateA || !dateB) {
           if (!dateA) return 1
@@ -174,5 +179,10 @@ export default {
 
   .pagination *+* {
     margin-top: 0;
+  }
+
+  .strike {
+    text-decoration: line-through;
+    color: #969696;
   }
 </style>
