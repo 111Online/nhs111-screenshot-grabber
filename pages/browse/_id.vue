@@ -10,6 +10,7 @@
       <p>
         Created: {{ date }}<br>
         Scheduled: {{ schedule || "straight away" }}<br>
+        <template v-if="simulate">Simulating: {{ simulate }}<br></template>
         Complete: {{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}%
         <template v-if="error_count"><br>Errors: {{error_count}} failures.</template>
       </p>
@@ -37,6 +38,7 @@ export default {
     return {
       date: null,
       schedule: null,
+      simulate: null,
       screenshots: [],
       total_count: 0,
       remaining: 0,
@@ -65,6 +67,7 @@ export default {
           this.screenshots = response.data.screenshots
           this.total_count = response.data.total_count
           this.error_count = response.data.error_count
+          this.simulate = response.data.simulate
           this.remaining = response.data.remaining
           if (!this.remaining && this.data_interval) clearInterval(this.data_interval)
           else if (this.remaining > 0 && !this.data_interval) this.data_interval = setInterval(this.getData, 2000)

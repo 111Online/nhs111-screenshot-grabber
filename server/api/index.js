@@ -4,30 +4,32 @@ const mkdirp = require('mkdirp')
 const PromisePool = require('es6-promise-pool')
 const POOL_LIMIT = 5
 const puppeteer = require('puppeteer')
-
+const moment = require('moment')
 const glob = require('glob')
 const archiver = require('archiver')
 const shortid = require('shortid')
 const scheduler = require('node-schedule')
 const database = require('../database').default
 
+const schedulerEnabled = true // Set to false to disable the regular schedule task
+
 const queue = []
 
 const baseurl = 'https://providersite.staging.111.service.nhs.uk'
 
 const urls = {
-  'Dx02': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,3,2,0',
+  'Dx02': baseurl + '/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,2,3,2,2,2,2,2,1',
   'Dx03': baseurl + '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
-  'Dx05': baseurl + '/question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,2,3,2,2,0,0,0',
-  'Dx06': baseurl + '/question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,0',
-  'Dx07': baseurl + '/question/direct/PW519MaleAdult/40/Abdominalpain/?answers=6,2,1,2,3,4,2,3,2,3,2,2,3,2,2,0',
-  'Dx08': baseurl + '/question/direct/PW755MaleAdult/33/Headache/?answers=2,2,2,4,2,3,2,2,2,2,1,0,3',
+  'Dx05': baseurl + 'question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,1,0,2,2,2,0,2',
+  'Dx06': baseurl + '/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,2,2,2,3,2,2,2,0',
+  'Dx07': baseurl + '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0',
+  'Dx08': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,2,2,2,2,2,0,0,3',
   'Dx11': baseurl + '/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=2,2,2,0',
   'Dx118': baseurl + '/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=2,0,0,3,0',
-  'Dx12': baseurl + '/question/direct/PW1620MaleAdult/40/Skin,Rash/?answers=2,2,2,4,2,2,2,2,0',
-  'Dx13': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,2,0,0,0,2,0',
-  'Dx14': baseurl + '/question/direct/PW519MaleAdult/40/AbdominalPain/?answers=6,2,2,4,2,3,2,3,2,2,3,2,2,3,3,2,2',
-  'Dx15': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,3,2,2,2,2,3,0,2,3,2,2',
+  'Dx12': baseurl + '/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=3,2,2,2,1',
+  'Dx13': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,2,2,2,2,2,3,2,0,0,0,2,0',
+  'Dx14': baseurl + '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2',
+  'Dx15': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,2,2,2,2,2,3,0,2,3,2,2',
   'Dx17': baseurl + '/question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=2,4,0,0,0,2,0,0,2,0',
   'Dx18': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,0,2,2',
   'Dx19': baseurl + '/question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=1,2,0,0,0,0,2,2',
@@ -35,10 +37,16 @@ const urls = {
   'Dx21': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,2,0,4',
   'Dx22': baseurl + '/question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=2,2,2,2,3,2,2,2,1,2',
   'Dx28': baseurl + '/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=2,2,1,2,2,2,2,2,2,3,0',
-  'Dx30': baseurl + '/question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,3,2,2,2,2,2',
-  'Dx31': baseurl + '/question/direct/PW1620MaleAdult/33/Skin,Rash/?answers=2,2,2,3,2,2,2,2,2,0,2,2,3,0,2',
-  'Dx50': baseurl + '/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,3,2,0,1,0,2,6,3,2',
-  'Dx60': baseurl + '/question/direct/PW1146FemaleChild/6/Eye,Sticky,Watery/?answers=2,0,3,2,1,3,2,3,2,2,3,2,2,2,2',
+  'Dx30': baseurl + '/question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,2,2,2,2,2,2',
+  'Dx31': baseurl + '/question/direct/PW1684FemaleAdult/24/Sexual or Menstrual Concerns/?answers=2,5,2,3,1,2,3,2,3,2,2,2,0,1',
+  'Dx32': baseurl + '/question/direct/PW1532FemaleAdult/20/ForeignBody,Vaginal/?answers=0,3,2',
+  'Dx325': baseurl + '/question/direct/PW881MaleAdult/40/Accidental Poisoning/?answers=2,1,2,2,5,2,2,2,4',
+  'Dx327': baseurl + '/question/direct/PW1098MaleChild/13/EyeSplashInjuryorMinorForeignBody/?answers=0,5,3,3,2',
+  'Dx329': baseurl + '/question/direct/PW1684FemaleAdult/24/SexualorMenstrualConcerns/?answers=2,0,0',
+  'Dx34': baseurl + '/question/direct/PW1746FemaleChild/5/Diabetes Blood Sugar Problem (Declared)/?answers=0,0,0,1,0,2,0,1,3',
+  'Dx35': baseurl + '/question/direct/PW1159MaleAdult/25/Constipation/?answers=2,4,2,2,4,2,2,3,3,2,2',
+  'Dx50': baseurl + '/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,2,0,1,0,2,6,3,2',
+  'Dx60': baseurl + '/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=6,2,4,2,2,2,2,1,0,2,2,2,2,4,3,2,2,0',
   'Dx89': baseurl + '/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
   'Dx92': baseurl + '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
   'Dx94': baseurl + '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
@@ -143,6 +151,7 @@ router.get('/screenshots/:id', function (req, res, next) {
     database.getMetadata(req.params.id).then((data) => {
       obj.schedule = data.schedule
       obj.date = data.date
+      obj.simulate = data.simulate
       // Temp fix, if data isn't in database yet
       if (data) {
         Object.assign(data, JSON.parse(data.data))
@@ -235,10 +244,12 @@ router.post('/screenshot', function (req, res, next) {
   })
 
   mkdirp(`./static/screenshots/${data.id}`)
-  database.insertMetadata(data)
 
   if (!req.body.schedule || data.schedule <= new Date()) {
+    database.insertMetadata(data, new Date())
     screenshots(data)
+  } else {
+    database.insertMetadata(data)
   }
 })
 
@@ -260,9 +271,15 @@ function screenshots (data) {
   var q = []
   data.postcodes.forEach((postcode, index) => {
     data.dxcodes.forEach((dxcode, i) => {
+      var dossearch = ''
+      if (data.simulate) {
+        var date = data.simulate.slice(0, data.simulate.length - 1) // For moment.js format
+        console.log(date, data.simulate, moment(data.simulate).format('YYYY-MM-DD HH:MM'))
+        dossearch = `&dossearchdatetime=${encodeURIComponent(moment(date).format('YYYY-MM-DD HH:MM'))}`
+      }
       q.push({
         name: dxcode,
-        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}`,
+        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}${dossearch}`,
         postcode: postcode,
         id: data.id,
         auth: data.auth,
@@ -282,11 +299,13 @@ function screenshots (data) {
   })
 }
 
-scheduler.scheduleJob('*/1 * * * *', () => {
-  var scheduleQueue = database.getScheduled()
-  scheduleQueue.then((schedule) => {
-    if (schedule) schedule.forEach((val) => screenshots(Object.assign(val, JSON.parse(val.data))))
+if (schedulerEnabled) {
+  scheduler.scheduleJob('*/1 * * * *', () => {
+    var scheduleQueue = database.getScheduled()
+    scheduleQueue.then((schedule) => {
+      if (schedule) schedule.forEach((val) => screenshots(Object.assign(val, JSON.parse(val.data))))
+    })
   })
-})
+}
 
 export default router

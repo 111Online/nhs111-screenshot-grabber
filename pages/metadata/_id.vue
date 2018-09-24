@@ -15,6 +15,7 @@
           Scheduled: {{ schedule || "straight away" }} <button v-if="!metadata.start_time && !metadata.cancelled" class="button--link" style="margin-left: 10px; margin-top: 0;" @click="unschedule">unschedule</button>
           <template v-if="metadata.start_time"><br>Start time: {{ metadata.start_time }}</template>
           <template v-if="metadata.finish_time"><br>Finish time: {{ metadata.finish_time }}</template>
+          <template v-if="metadata.simulate"><br>Simulating: {{ metadata.simulate }}</template>
           <template v-if="remaining !== null"><br>Complete: {{ ((1 - (remaining / total_count)) * 100).toFixed(0) }}%</template>
           <template v-if="error_count"><br>Errors: {{error_count}} failures.</template>
         </p>

@@ -57,6 +57,18 @@
         </div>
       </details>
 
+
+      <details>
+        <summary><span class="details__arrow"></span> Simulate date/time</summary>
+        <div>
+          <!-- <label for="schedule-date">Schedule <span class="count">(optional)</span><p class="form-hint">Please enter a future date and time to schedule the tool to run. Leave empty to run it immediately.</p></label> -->
+          <label for="simulate-date">Simulate date/time <span class="count">(optional)</span><p class="form-hint">Please enter a date and time to simulate or leave empty.</p></label>
+          <input type="date" id="simulate-date" class="form-textbox" v-model="simulate_date" name="simulate-date">
+          <input type="time" id="simulate-time" class="form-textbox" v-model="simulate_time" name="simulate-time">
+          <p v-if="simulate">Simulating: {{ simulate_format }}</p>
+        </div>
+      </details>
+
       <button type="submit" class="button--next">Next</button>
       <input type="hidden" name="schedule" v-model="schedule">
 
@@ -79,6 +91,8 @@ export default {
       name: '',
       schedule_date: '',
       schedule_time: '',
+      simulate_date: '',
+      simulate_time: '',
       auth_user: '',
       auth_password: '',
       dos: 'live'
@@ -107,8 +121,16 @@ export default {
       }
       return ''
     },
+    simulate: function () {
+      let date = new Date(this.simulate_date + 'T' + this.simulate_time)
+      if (isNaN(date.valueOf())) return ''
+      else return date
+    },
     schedule_format: function () {
       return new Date(this.schedule).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    },
+    simulate_format: function () {
+      return new Date(this.simulate).toLocaleString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
     }
   },
   methods: {
@@ -136,7 +158,8 @@ export default {
         schedule: this.schedule,
         auth: { username: this.auth_user, password: this.auth_password },
         dos: this.dos,
-        dxcodes: dxobj
+        dxcodes: dxobj,
+        simulate: this.simulate
       })
         .then((response) => {
           this.$router.push(`/browse/${response.data.id}`)
