@@ -274,7 +274,6 @@ function screenshots (data) {
       var dossearch = ''
       if (data.simulate) {
         var date = data.simulate.slice(0, data.simulate.length - 1) // For moment.js format
-        console.log(date, data.simulate, moment(data.simulate).format('YYYY-MM-DD HH:MM'))
         dossearch = `&dossearchdatetime=${encodeURIComponent(moment(date).format('YYYY-MM-DD HH:MM'))}`
       }
       q.push({
