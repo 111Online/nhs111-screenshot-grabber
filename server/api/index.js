@@ -149,6 +149,7 @@ router.get('/screenshots/:id', function (req, res, next) {
     })
 
     database.getMetadata(req.params.id).then((data) => {
+      if (!data) return
       obj.schedule = data.schedule
       obj.date = data.date
       obj.simulate = data.simulate
