@@ -118,7 +118,7 @@ const promiseProducer = () => {
           data.errors[item.postcode].push(item.name)
           database.insertMetadata(data)
           console.log(`[${item.id}] Could not screenshot ${item.postcode} - ${item.name}`)
-        })
+        }).catch((e) => console.log('Screenshot get metadata failed', e))
       })
   })
 }
