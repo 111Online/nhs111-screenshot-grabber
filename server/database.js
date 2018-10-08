@@ -53,8 +53,8 @@ const cancelSchedule = async function (id) {
 
 const insertMetadata = async function (data, startTime) {
   const db = await dbPromise
-  db.get('INSERT OR REPLACE INTO Metadata (id, name, dos, data, simulate, date) VALUES (?, ?, ?, ?, ?, ?);', [ data.id, data.name, data.dos, JSON.stringify({ urls: data.urls, dxcodes: data.dxcodes, postcodes: data.postcodes, errors: data.errors, auth: data.auth }), date(data.simulate), date(data.date) ])
-  insertScheduler(data.id, data.schedule, startTime)
+  return db.get('INSERT OR REPLACE INTO Metadata (id, name, dos, data, simulate, date) VALUES (?, ?, ?, ?, ?, ?);', [ data.id, data.name, data.dos, JSON.stringify({ urls: data.urls, dxcodes: data.dxcodes, postcodes: data.postcodes, errors: data.errors, auth: data.auth }), date(data.simulate), date(data.date) ])
+    .then(() => insertScheduler(data.id, data.schedule, startTime))
 }
 
 const date = function (date) {

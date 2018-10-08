@@ -247,8 +247,7 @@ router.post('/screenshot', function (req, res, next) {
   mkdirp(`./static/screenshots/${data.id}`)
 
   if (!req.body.schedule || data.schedule <= new Date()) {
-    database.insertMetadata(data, new Date())
-    screenshots(data)
+    database.insertMetadata(data, new Date()).then(() => screenshots(data))
   } else {
     database.insertMetadata(data)
   }
