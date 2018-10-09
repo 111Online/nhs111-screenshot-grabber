@@ -20,7 +20,7 @@ const baseurl = 'https://providersite.staging.111.service.nhs.uk'
 const urls = {
   'Dx02': baseurl + '/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,2,3,2,2,2,2,2,1',
   'Dx03': baseurl + '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
-  'Dx05': baseurl + 'question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,1,0,2,2,2,0,2',
+  'Dx05': baseurl + '/question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,1,0,2,2,2,0,2',
   'Dx06': baseurl + '/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,2,2,2,3,2,2,2,0',
   'Dx07': baseurl + '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0',
   'Dx08': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,2,2,2,2,2,0,0,3',
@@ -49,7 +49,7 @@ const urls = {
   'Dx60': baseurl + '/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=6,2,4,2,2,2,2,1,0,2,2,2,2,4,3,2,2,0',
   'Dx89': baseurl + '/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
   'Dx92': baseurl + '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
-  'Dx94': baseurl + '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
+  'Dx94': baseurl + '/quesstion/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0'
 }
 
 let Browser
