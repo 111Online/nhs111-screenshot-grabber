@@ -49,7 +49,7 @@ const urls = {
   'Dx60': baseurl + '/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=6,2,4,2,2,2,2,1,0,2,2,2,2,4,3,2,2,0',
   'Dx89': baseurl + '/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
   'Dx92': baseurl + '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
-  'Dx94': baseurl + '/quesstion/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0',
+  'Dx94': baseurl + '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0',
   'Dx330': baseurl + '/question/direct/PW564MaleAdult/25/Burn, Chemical/?answers=4,2,2,0,2,4,3,2,1,2'
 }
 
