@@ -277,9 +277,14 @@ function screenshots (data) {
         var date = data.simulate.slice(0, data.simulate.length - 1) // For moment.js format
         dossearch = `&dossearchdatetime=${encodeURIComponent(moment(date).format('YYYY-MM-DD HH:MM'))}`
       }
+
+      var indexOfQueryString = urls[dxcode].indexOf('?')
+      var url = urls[dxcode]
+      var urlWithPostcode = url.slice(0, indexOfQueryString) + postcode.replace(' ', '') + '/' + url.slice(indexOfQueryString)
+
       q.push({
         name: dxcode,
-        url: `${urls[dxcode]}&postcode=${postcode.replace(' ', '')}&Dos=${data.dos}${dossearch}`,
+        url: `${urlWithPostcode}&Dos=${data.dos}${dossearch}`,
         postcode: postcode,
         id: data.id,
         auth: data.auth,
