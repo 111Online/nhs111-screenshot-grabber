@@ -15,42 +15,47 @@ const schedulerEnabled = true // Set to false to disable the regular schedule ta
 
 const queue = []
 
-const baseurl = 'https://providersite.staging.111.service.nhs.uk'
+const baseurl = 'https://providersite.staging.111.nhs.uk'
 
 const urls = {
-  'Dx02': baseurl + '/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,2,3,2,2,2,2,2,1',
-  'Dx03': baseurl + '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=2,3,2,2,2,3,3,0,0,2',
-  'Dx05': baseurl + '/question/direct/PW755MaleAdult/24/Headache/?answers=2,2,2,4,0,1,0,2,2,2,0,2',
-  'Dx06': baseurl + '/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,2,2,2,3,2,2,2,0',
-  'Dx07': baseurl + '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0',
-  'Dx08': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,2,2,2,2,2,0,0,3',
-  'Dx11': baseurl + '/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=2,2,2,0',
-  'Dx118': baseurl + '/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=2,0,0,3,0',
-  'Dx12': baseurl + '/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=3,2,2,2,1',
-  'Dx13': baseurl + '/question/direct/PW755MaleAdult/22/Headache/?answers=2,2,2,4,2,2,2,2,2,2,3,2,0,0,0,2,0',
-  'Dx14': baseurl + '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2',
-  'Dx15': baseurl + '/question/direct/PW755MaleAdult/40/Headache/?answers=2,2,2,4,2,2,2,2,2,2,3,0,2,3,2,2',
-  'Dx17': baseurl + '/question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=2,4,0,0,0,2,0,0,2,0',
-  'Dx18': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,0,2,2',
-  'Dx19': baseurl + '/question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=1,2,0,0,0,0,2,2',
-  'Dx20': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=2,3,1,2,0,2,0',
-  'Dx21': baseurl + '/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=1,3,0,2,0,4',
-  'Dx22': baseurl + '/question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=2,2,2,2,3,2,2,2,1,2',
-  'Dx28': baseurl + '/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=2,2,1,2,2,2,2,2,2,3,0',
-  'Dx30': baseurl + '/question/direct/PW752FemaleAdult/16/Headache/?answers=2,0,2,2,2,4,2,2,2,2,2,2,2',
-  'Dx31': baseurl + '/question/direct/PW1684FemaleAdult/24/Sexual or Menstrual Concerns/?answers=2,5,2,3,1,2,3,2,3,2,2,2,0,1',
-  'Dx32': baseurl + '/question/direct/PW1532FemaleAdult/20/ForeignBody,Vaginal/?answers=0,3,2',
-  'Dx325': baseurl + '/question/direct/PW881MaleAdult/40/Accidental Poisoning/?answers=2,1,2,2,5,2,2,2,4',
-  'Dx327': baseurl + '/question/direct/PW1098MaleChild/13/EyeSplashInjuryorMinorForeignBody/?answers=0,5,3,3,2',
-  'Dx329': baseurl + '/question/direct/PW1684FemaleAdult/24/SexualorMenstrualConcerns/?answers=2,0,0',
-  'Dx34': baseurl + '/question/direct/PW1746FemaleChild/5/Diabetes Blood Sugar Problem (Declared)/?answers=0,0,0,1,0,2,0,1,3',
-  'Dx35': baseurl + '/question/direct/PW1159MaleAdult/25/Constipation/?answers=2,4,2,2,4,2,2,3,3,2,2',
-  'Dx50': baseurl + '/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,2,3,1,2,2,2,0,1,0,2,6,3,2',
-  'Dx60': baseurl + '/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=6,2,4,2,2,2,2,1,0,2,2,2,2,4,3,2,2,0',
-  'Dx89': baseurl + '/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,2,2,4,2,4,2,2,2,2,2,2,2',
-  'Dx92': baseurl + '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,4,2,4,2,0,3',
-  'Dx94': baseurl + '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0',
-  'Dx330': baseurl + '/question/direct/PW564MaleAdult/25/Burn, Chemical/?answers=4,2,2,0,2,4,3,2,1,2'
+  'Dx02': ['/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,0,2,3,2,2,2,2,2,1'],
+  'Dx03': ['/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=0,2,3,2,2,2,3,3,0,0,2'],
+  'Dx05': ['/question/direct/PW755MaleAdult/24/Headache/?answers=0,2,2,2,4,0,1,0,2,2,2,0,2'],
+  'Dx06': ['/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,0,2,2,2,3,2,2,2,0'],
+  'Dx07': ['/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0'],
+  'Dx08': ['/question/direct/PW755MaleAdult/22/Headache/?answers=0,2,2,2,4,2,2,2,2,2,2,0,0,3'],
+  'Dx11': ['/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=0,2,2,2,0'],
+  'Dx118': ['/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=0,2,0,0,3,0'],
+  'Dx12': ['/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=0,3,2,2,2,1'],
+  'Dx13': ['/question/direct/PW755MaleAdult/22/Headache/?answers=0,2,2,2,4,2,2,2,2,2,2,3,2,0,0,0,2,0'],
+  'Dx14': ['/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2'],
+  'Dx15': ['/question/direct/PW755MaleAdult/40/Headache/?answers=0,2,2,2,4,2,2,2,2,2,2,3,0,2,3,2,2'],
+  'Dx17': ['/question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=0,2,4,0,0,0,2,0,0,2,0'],
+  'Dx18': ['/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=0,1,3,0,0,2,2'],
+  'Dx19': ['/question/direct/PW1610MaleAdult/25/Dentalproblems/?answers=0,1,2,0,0,0,0,2,2'],
+  'Dx20': ['/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=0,2,3,1,2,0,2,0'],
+  'Dx21': ['/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=0,1,3,0,2,0,4'],
+  'Dx22': ['/question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=0,2,2,2,2,3,2,2,2,1,2'],
+  'Dx28': ['/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=0,2,2,1,2,2,2,2,2,2,3,0'],
+  'Dx30': ['/question/direct/PW752FemaleAdult/16/Headache/?answers=0,2,0,2,2,2,4,2,2,2,2,2,2,2'],
+  'Dx31': ['/question/direct/PW1684FemaleAdult/24/Sexual or Menstrual Concerns/?answers=0,2,5,2,3,1,2,3,2,3,2,2,2,0,1'],
+  'Dx32': ['/question/direct/PW1532FemaleAdult/20/ForeignBody,Vaginal/?answers=0,0,3,2'],
+  'Dx325': ['/question/direct/PW881MaleAdult/40/Accidental Poisoning/?answers=0,2,1,2,2,5,2,2,2,4'],
+  'Dx327': ['/question/direct/PW1098MaleChild/13/EyeSplashInjuryorMinorForeignBody/?answers=0,0,5,3,3,2'],
+  'Dx329': ['/question/direct/PW1684FemaleAdult/24/SexualorMenstrualConcerns/?answers=0,2,0,0'],
+  'Dx34': ['/question/direct/PW1746FemaleChild/5/Diabetes Blood Sugar Problem (Declared)/?answers=0,0,0,0,1,0,2,0,1,3'],
+  'Dx35': ['/question/direct/PW1159MaleAdult/25/Constipation/?answers=0,2,4,2,2,4,2,2,3,3,2,2'],
+  'Dx50': ['/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,0,2,3,1,2,2,2,0,1,0,2,6,3,2'],
+  'Dx60': ['/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=0,6,2,4,2,2,2,2,1,0,2,2,2,2,4,3,2,2,0'],
+  'Dx89': ['/question/direct/PW1034MaleChild/6/Swallowedanobject/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2,2'],
+  'Dx92': ['/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,0,4,2,4,2,0,3'],
+  'Dx94': ['/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0'],
+  'Dx330': ['/question/direct/PW564MaleAdult/25/Burn, Chemical/?answers=0,4,2,2,0,2,4,3,2,1,2'],
+  'Dx108': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,0'],
+  'Dx80': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,0', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,0&otherservices=true'],
+  'Dx85': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1&otherservices=true'],
+  'Dx86': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,2', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,2&otherservices=true'],
+  'Dx87': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,3', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,3&otherservices=true']
 }
 
 let Browser
@@ -278,17 +283,19 @@ function screenshots (data) {
         dossearch = `&dossearchdatetime=${encodeURIComponent(moment(date).format('YYYY-MM-DD HH:MM'))}`
       }
 
-      var indexOfQueryString = urls[dxcode].indexOf('?')
-      var url = urls[dxcode]
-      var urlWithPostcode = url.slice(0, indexOfQueryString) + postcode.replace(' ', '') + '/' + url.slice(indexOfQueryString)
-
-      q.push({
-        name: dxcode,
-        url: `${urlWithPostcode}&Dos=${data.dos}${dossearch}`,
-        postcode: postcode,
-        id: data.id,
-        auth: data.auth,
-        dos: data.dos
+      var dxurls = urls[dxcode]
+      dxurls.forEach((url, u) => {
+        var indexOfQueryString = url.indexOf('?')
+        var urlWithPostcode = url.slice(0, indexOfQueryString) + postcode.replace(' ', '') + '/' + url.slice(indexOfQueryString)
+        console.log(baseurl + `${urlWithPostcode}&Dos=${data.dos}${dossearch}`)
+        q.push({
+          name: dxcode + `.` + u, // index appended so multiple dxcode-related screenshots don't overwrite each other
+          url: baseurl + `${urlWithPostcode}&Dos=${data.dos}${dossearch}`,
+          postcode: postcode,
+          id: data.id,
+          auth: data.auth,
+          dos: data.dos
+        })
       })
     })
   })
