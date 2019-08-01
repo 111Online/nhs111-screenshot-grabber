@@ -83,7 +83,7 @@ export default {
   data () {
     return {
       urls: '',
-      dxcodes: ['Dx02', 'Dx03', 'Dx05', 'Dx06', 'Dx07', 'Dx08', 'Dx11', 'Dx118', 'Dx12', 'Dx13', 'Dx14', 'Dx15', 'Dx17', 'Dx18', 'Dx19', 'Dx20', 'Dx21', 'Dx22', 'Dx28', 'Dx30', 'Dx31', 'Dx32', 'Dx325', 'Dx327', 'Dx329', 'Dx34', 'Dx35', 'Dx50', 'Dx60', 'Dx89', 'Dx92', 'Dx94', 'Dx330', 'Dx108', 'Dx80', 'Dx85', 'Dx86', 'Dx87'],
+      dxcodes: ['Dx012', 'Dx013', 'Dx016', 'Dx0162', 'Dx0121', 'Dx0122', 'Dx0127', 'Dx0126', 'Dx02', 'Dx03', 'Dx05', 'Dx06', 'Dx07', 'Dx08', 'Dx11', 'Dx118', 'Dx12', 'Dx13', 'Dx14', 'Dx15', 'Dx17', 'Dx18', 'Dx19', 'Dx20', 'Dx21', 'Dx22', 'Dx28', 'Dx30', 'Dx31', 'Dx32', 'Dx325', 'Dx327', 'Dx329', 'DX330', 'Dx34', 'Dx35', 'Dx50', 'Dx60', 'Dx75', 'Dx89', 'Dx92', 'Dx94', 'Dx80', 'Dx85', 'Dx86', 'Dx87'],
       dxcustom: [],
       dxcount: 0,
       postcodes: '',
