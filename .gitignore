@@ -17,3 +17,6 @@ static/screenshots/
 storage/metadata/
 
 .DS_Store
+
+# Visual Studio Code settings folder
+.vscode/

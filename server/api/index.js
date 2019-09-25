@@ -15,7 +15,11 @@ const schedulerEnabled = true // Set to false to disable the regular schedule ta
 
 const queue = []
 
-const baseurl = 'https://providersite.staging.111.nhs.uk'
+const baseurl = process.env.BASE_URL
+
+if (!baseurl) {
+  console.error('Base url not provided, missing from environmental variables')
+}
 
 const urls = {
   'Dx012': ['/question/direct/PW1771MaleAdult/16/SkinProblems/?answers=0,0,0,0,2,1'],
