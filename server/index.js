@@ -39,3 +39,4 @@ app.use(nuxt.render)
 // Listen the server
 app.listen(port, host)
 console.log('Server listening on ' + host + ':' + port) // eslint-disable-line no-console
+console.log('Enviroment variables: ' + process.env.BASE_URL + ' ' + process.env.AUTH_USER + ' ' + process.env.AUTH_PASS)
