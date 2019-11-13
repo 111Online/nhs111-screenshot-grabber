@@ -185,7 +185,7 @@ router.get('/screenshots/:id', function (req, res, next) {
         } else {
           obj.error_count = 0
         }
-        obj.total_count = data.dxcodes.length * data.postcodes.length
+        obj.total_count = data.dxcodes.reduce((prev, curr) => prev + urls[curr].length, 0) * data.postcodes.length
         obj.remaining = obj.total_count - obj.error_count - obj.success_count
         res.json(obj)
       } else {
