@@ -15,6 +15,7 @@ module.exports = {
     ]
   },
   serverMiddleware: [
+    {path: '/', handler: authMiddleware},
     {path: '/metadata', handler: authMiddleware}
   ],
   /*
