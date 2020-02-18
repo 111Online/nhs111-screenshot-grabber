@@ -24,7 +24,7 @@ if (!baseurl) {
 const urls = {
   'Dx012': ['/question/direct/PW1771MaleAdult/16/SkinProblems/?answers=0,0,0,0,2,1'],
   'Dx013': ['/question/direct/PW588MaleAdult/16/ChestorUpperBackInjury,Blunt/?answers=0,2,2,5,3,3,2,2,2'],
-  'Dx016': ['/question/direct/PW1591MaleChild/5/Leg Injury,Blunt/?answers=0,2,0,2,2'],
+  'Dx016': ['/question/direct/PW1591MaleChild/5/Leg Injury,Blunt/?answers=0,2,2,0,2,2,2'],
   'Dx0162': ['/question/direct/PW684MaleAdult/20/Head,FacialorNeckInjury,Blunt/?answers=0,2,2,4,4,3,2,2,2,3,1,2'],
   'Dx0121': ['/question/direct/PA21FemaleAdult/40/ChestandUpperBackPain/?answers=0,2,1,0,2,1,2'],
   'Dx0122': ['/question/direct/PW516FemaleAdult/30/AbdominalPain/?answers=0,5,0,1,2,0,0'],
