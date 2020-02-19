@@ -29,7 +29,7 @@ const urls = {
   'Dx0121': ['/question/direct/PA21FemaleAdult/40/ChestandUpperBackPain/?answers=0,2,1,0,2,1,2'],
   'Dx0122': ['/question/direct/PW516FemaleAdult/30/AbdominalPain/?answers=0,5,0,1,2,0,0'],
   'Dx0127': ['/question/direct/PW516FemaleAdult/25/AbdominalPain/?answers=0,4,0,2,0,1,1,2,4,0'],
-  'Dx0126': ['/question/direct/PW580FemaleAdult/25/Burn,Thermal/?answers=0,0,4'],
+  'Dx0126': ['/question/direct/PW580FemaleAdult/25/Burn,Thermal/?answers=0,0,5'],
   'Dx02': ['/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,0,2,3,2,2,2,2,2,1'],
   'Dx03': ['/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=0,2,3,2,2,2,3,3,0,0,2'],
   'Dx05': ['/question/direct/PW755MaleAdult/24/Headache/?answers=0,2,2,2,4,0,1,0,2,2,2,0,2&otherservices=true', '/question/direct/PW755MaleAdult/24/Headache/?answers=0,2,2,2,4,0,1,0,2,2,2,0,2'],
