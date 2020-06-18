@@ -39,7 +39,7 @@ const urls = {
   'Dx11': ['/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=0,2,2,2,0&otherservices=true', '/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=0,2,2,2,0'],
   'Dx118': ['/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=0,2,0,0,3,0'],
   'Dx12': ['/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=0,3,2,2,2,1&otherservices=true', '/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=0,3,2,2,2,1'],
-  'Dx13': ['/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)/?answers=0,0,2,2,0,2,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)//?answers=0,0,2,2,0,2,2,2,2,2,2,2'],
+  'Dx13': ['/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)/?answers=0,0,2,2,0,2,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)/?answers=0,0,2,2,0,2,2,2,2,2,2,2'],
   'Dx14': ['/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2&otherservices=true', '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2'],
   'Dx15': ['/question/direct/PW755MaleAdult/40/Headache/?answers=0,2,2,2,4,2,2,2,2,2,2,2,2,2,2,0&otherservices=true', '/question/direct/PW755MaleAdult/40/Headache/?answers=0,2,2,2,4,2,2,2,2,2,2,2,2,2,2,0'],
   'Dx17': ['/question/direct/PW620FemaleAdult/19/Dentalinjury/?answers=0,2,4,0,0,0,2,0,0,2,0'],
