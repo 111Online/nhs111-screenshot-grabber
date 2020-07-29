@@ -30,14 +30,14 @@ const urls = {
   'Dx0122': ['/question/direct/PW516FemaleAdult/30/AbdominalPain/?answers=0,5,0,1,2,0,0'],
   'Dx0127': ['/question/direct/PW516FemaleAdult/25/AbdominalPain/?answers=0,4,0,2,0,1,1,2,4,0'],
   'Dx0126': ['/question/direct/PW580FemaleAdult/25/Burn,Thermal/?answers=0,0,5'],
-  'Dx02': ['/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,0,2,3,2,2,2,2,2,1'],
-  'Dx03': ['/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=0,2,3,2,2,2,3,3,0,0,2'],
+  'Dx02': ['/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,0,2,3,2,2,2,2,2,1&otherservices=true', '/question/direct/PW987MaleAdult/24/Burn, Sun/?answers=0,0,2,3,2,2,2,2,2,1'],
+  'Dx03': ['/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=0,2,3,2,2,2,3,3,0,0,2&otherservices=true', '/question/direct/PW1685MaleAdult/24/SexualConcerns/?answers=0,2,3,2,2,2,3,3,0,0,2'],
   'Dx05': ['/question/direct/PW755MaleAdult/24/Headache/?answers=0,2,2,2,4,0,1,2,4,2,2,2,2&otherservices=true', '/question/direct/PW755MaleAdult/24/Headache/?answers=0,2,2,2,4,0,1,2,4,2,2,2,2'],
   'Dx06': ['/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,0,2,2,2,4,2,2,2,2,2,0&otherservices=true', '/question/direct/PW1771MaleAdult/40/Skin Problems/?answers=0,0,2,2,2,4,2,2,2,2,2,0'],
   'Dx07': ['/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0&otherservices=true', '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,1,1,3,4,2,3,2,2,2,3,2,3,2,2,0'],
   'Dx08': ['/question/direct/PW755MaleAdult/22/Headache/?answers=0,2,2,2,4,2,2,4,2,2,2,2,0,0,3&otherservices=true', '/question/direct/PW755MaleAdult/22/Headache/?answers=0,2,2,2,4,2,2,4,2,2,2,2,0,0,3'],
   'Dx11': ['/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=0,2,2,2,0&otherservices=true', '/question/direct/PW1564MaleAdult/34/Genitalproblems/?answers=0,2,2,2,0'],
-  'Dx118': ['/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=0,2,0,0,3,0'],
+  'Dx118': ['/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=0,2,0,0,3,0&otherservices=true', '/question/direct/PW1515FemaleAdult/22/DentalBleeding/?answers=0,2,0,0,3,0'],
   'Dx12': ['/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=0,3,2,2,2,1&otherservices=true', '/question/direct/PW1575MaleAdult/40/Bites%20and%20Stings/?answers=0,3,2,2,2,1'],
   'Dx13': ['/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)/?answers=0,0,2,2,0,2,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1746FemaleChild/5/DiabetesBloodSugarProblem(Declared)/?answers=0,0,2,2,0,2,2,2,2,2,2,2'],
   'Dx14': ['/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2&otherservices=true', '/question/direct/PW519MaleAdult/40/Abdominal Pain/?answers=0,6,2,2,4,2,3,2,2,2,3,2,3,2,2,3,3,2,2'],
@@ -61,7 +61,7 @@ const urls = {
   'Dx50': ['/question/direct/PW1775FemaleAdult/30/Hiccups/?answers=0,0,2,3,1,2,2,2,0,1,0,2,6,3,2'],
   'Dx60': ['/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=0,6,2,2,4,2,2,2,2,2,2,2,2,2,2,0,4,3,2,2,0'],
   'Dx75': ['/question/direct/PW854FemaleAdult/24/Sorethroat/?answers=0,0,2,2,2,3,2,2,3,2,2,0,2'],
-  'Dx89': ['/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2'],
+  'Dx89': ['/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2'],
   'Dx92': ['/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,0,4,2,4,2,0,3'],
   'Dx94': ['/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0'],
   'Dx80': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1&otherservices=true'],
@@ -73,7 +73,7 @@ const urls = {
 let Browser
 
 const screenshot = async (opts, page) => {
-  if (opts.auth && opts.auth.username && opts.auth.password) page.setExtraHTTPHeaders({'Authorization': 'Basic ' + btoa(opts.auth.username + ':' + opts.auth.password)})
+  if (opts.auth && opts.auth.username && opts.auth.password) page.setExtraHTTPHeaders({ 'Authorization': 'Basic ' + btoa(opts.auth.username + ':' + opts.auth.password) })
   await page.setViewport({ width: 700, height: 600 })
   const status = await page.goto(opts.url)
   if (!status.ok) {
@@ -283,7 +283,7 @@ router.get('/schedule/now', function (req, res, next) {
   })
 })
 
-function screenshots (data) {
+function screenshots(data) {
   if (!data.postcodes || !data.dxcodes) return
   database.startScreenshots(data.id, new Date())
   var q = []
@@ -314,7 +314,7 @@ function screenshots (data) {
 
   queue.push(q)
 
-  puppeteer.launch({ args: [ '--no-sandbox' ] }).then(async browser => {
+  puppeteer.launch({ args: ['--no-sandbox'] }).then(async browser => {
     Browser = browser
     const pool = new PromisePool(promiseProducer, POOL_LIMIT)
     await pool.start()
