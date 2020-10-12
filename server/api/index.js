@@ -63,11 +63,16 @@ const urls = {
   'Dx75': ['/question/direct/PW854FemaleAdult/24/Sorethroat/?answers=0,0,2,2,2,3,2,2,3,2,2,0,2'],
   'Dx89': ['/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2'],
   'Dx92': ['/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,0,4,2,4,2,0,3'],
-  'Dx94': ['/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0'],
+  'Dx94': ['/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0&otherservices=true','/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0'],
   'Dx80': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1&otherservices=true'],
   'Dx85': ['/question/direct/PW1827FemaleAdult/33/EmergencyPrescription111online/?answers=0,1,0', '/question/direct/PW1827FemaleAdult/33/EmergencyPrescription111online/?answers=0,1,0&otherservices=true'],
   'Dx86': ['/question/direct/PW1827MaleChild/13/EmergencyPrescription111online/?answers=0,1,2', '/question/direct/PW1827MaleChild/13/EmergencyPrescription111online/?answers=0,1,2&otherservices=true'],
-  'Dx87': ['/question/direct/PW1827FemaleChild/13/EmergencyPrescription111online/?answers=0,1,3', '/question/direct/PW1827FemaleChild/13/EmergencyPrescription111online/?answers=0,1,3&otherservices=true']
+  'Dx87': ['/question/direct/PW1827FemaleChild/13/EmergencyPrescription111online/?answers=0,1,3', '/question/direct/PW1827FemaleChild/13/EmergencyPrescription111online/?answers=0,1,3&otherservices=true'],
+  'Dx01112': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,0,2,3,0,2,2,2,0'],
+  'Dx01113': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,2,2,2,2,0,0'],
+  'Dx01115': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,0,2,3,2,2,2,2,2,2,2,0,0,2'],
+  'Dx01116': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,2,2,2,2,2,2,2,2,0,2,2,3'],
+  'Dx01117': ['/question/direct/PW1040FemaleAdult/24/ColdorFluSymptoms/?answers=0,2,0,2,2,2,2,2,2,2,2,2,2,2,3,1']
 }
 
 let Browser
