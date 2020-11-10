@@ -49,7 +49,7 @@ const urls = {
   'Dx21': ['/question/direct/PW1610FemaleAdult/23/Dentalproblems/?answers=0,1,3,0,2,0,5'],
   'Dx22': ['/question/direct/PW870MaleAdult/35/ToothachewithoutDentalInjury/?answers=0,2,2,2,2,3,2,2,2,1,2'],
   'Dx28': ['/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=0,2,2,1,2,2,2,2,2,2,3,0&otherservices=true','/question/direct/PW1134MaleAdult/20/Eye,RedorIrritable/?answers=0,2,2,1,2,2,2,2,2,2,3,0' ],
-  'Dx30': ['/question/direct/PW752FemaleAdult/16/Headache/?answers=0,2,0,2,2,2,4,2,2,2,2,2,2,2,2'],
+  'Dx30': ['/question/direct/PW752FemaleAdult/16/Headache/?answers=0,2,0,2,2,2,4,2,2,2,2,2,2,2,2,0'],
   'Dx31': ['/question/direct/PW1684FemaleAdult/24/Sexual or Menstrual Concerns/?answers=0,2,5,2,3,1,2,3,2,3,2,2,2,0,1'],
   'Dx32': ['/question/direct/PW1532FemaleAdult/20/ForeignBody,Vaginal/?answers=0,0,3,2'],
   'Dx325': ['/question/direct/PW881MaleAdult/40/Accidental Poisoning/?answers=0,2,1,1,2,2,5,2,2,2,3'],
