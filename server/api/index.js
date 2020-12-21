@@ -71,7 +71,7 @@ const urls = {
   'Dx01112': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,0,2,3,0,2,2,2,0'],
   'Dx01113': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,2,2,2,2,0,0'],
   'Dx01115': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,0,2,3,2,2,2,2,2,2,2,0,0,2'],
-  'Dx01116': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,2,2,2,2,2,2,2,2,0,2,2,3'],
+  'Dx01116': ['/question/direct/PW1854FemaleAdult/25/LossofTasteorSmell/?answers=0,0,2,2,0,2,2,2,2,2,2,2,2,2,2,0,2,2,3'],
   'Dx01117': ['/question/direct/PW1040FemaleAdult/24/ColdorFluSymptoms/?answers=0,2,0,2,2,2,2,2,2,2,2,2,2,2,3,1']
 }
 
