@@ -62,6 +62,8 @@ const urls = {
   'Dx60': ['/question/direct/PW1629MaleAdult/40/Eye or Eyelid Problems/?answers=0,6,2,2,4,2,2,2,2,2,2,2,2,2,2,2,0,4,3,2,2,0'],
   'Dx75': ['/question/direct/PW854FemaleAdult/24/Sorethroat/?answers=0,0,2,2,2,3,2,2,3,2,2,0,2'],
   'Dx89': ['/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2&otherservices=true', '/question/direct/PW1034MaleChild/6/Object,IngestedorInhaled/?answers=0,0,2,2,4,2,4,2,2,2,2,2,2'],
+  'Dx92': ['/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,0,4,2,4,2,0,3&otherservices=true', '/question/direct/PW1751FemaleAdult/16/MentalHealthProblems/?answers=0,0,4,2,4,2,0,3'],
+  'Dx94': ['/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0&otherservices=true', '/question/direct/PW1684FemaleAdult/22/SexualorMenstrualConcerns/?answers=0,0'],
   'Dx80': ['/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1', '/question/direct/PW1827MaleAdult/33/EmergencyPrescription111online/?answers=0,1,1&otherservices=true'],
   'Dx85': ['/question/direct/PW1827FemaleAdult/33/EmergencyPrescription111online/?answers=0,1,0', '/question/direct/PW1827FemaleAdult/33/EmergencyPrescription111online/?answers=0,1,0&otherservices=true'],
   'Dx86': ['/question/direct/PW1827MaleChild/13/EmergencyPrescription111online/?answers=0,1,2', '/question/direct/PW1827MaleChild/13/EmergencyPrescription111online/?answers=0,1,2&otherservices=true'],
